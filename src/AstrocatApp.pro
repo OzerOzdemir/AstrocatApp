@@ -1,4 +1,4 @@
-QT       += core gui sql concurrent
+QT       += core gui sql concurrent quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -7,12 +7,19 @@ CONFIG += c++17
 VERSION = 0.0.1
 DEFINES += CURRENT_APP_VERSION=\"\\\"$${VERSION}\\\"\"
 
+# Additional import path used to resolve QML modules in Qt Creator's code model
+QML_IMPORT_PATH =
+
+# Additional import path used to resolve QML modules just for Qt Quick Designer
+QML_DESIGNER_IMPORT_PATH =
+
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
     aboutwindow.cpp \
+    appmanager.cpp \
     autostretcher.cpp \
     catalog.cpp \
     fileprocessfilter.cpp \
@@ -34,6 +41,7 @@ SOURCES += \
 
 HEADERS += \
     aboutwindow.h \
+    appmanager.h \
     astrofile.h \
     autostretcher.h \
     catalog.h \

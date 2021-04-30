@@ -33,6 +33,7 @@
 
 NewFileProcessor::NewFileProcessor(QObject *parent) : QObject(parent)
 {
+//    threadPool.setMaxThreadCount(2);
     catalog = nullptr;
 }
 

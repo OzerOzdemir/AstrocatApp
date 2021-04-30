@@ -34,6 +34,8 @@
 enum AstroFileRoles
 {
     IdRole = Qt::UserRole,
+    DisplayRole,
+    DecorationRole,
     InstrumentRole,
     ObjectRole,
     FilterRole,
@@ -93,6 +95,10 @@ private:
     QSize cellSize = QSize(200, 200);
 
     Catalog* catalog;
+
+    // QAbstractItemModel interface
+public:
+    QHash<int, QByteArray> roleNames() const;
 };
 
 #endif // FILEVIEWMODEL_H

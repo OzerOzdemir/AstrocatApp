@@ -24,6 +24,7 @@
 
 #include "fileviewmodel.h"
 
+#include <QBuffer>
 #include <QPixmap>
 #include <QPixmapCache>
 
@@ -41,6 +42,32 @@ void FileViewModel::setInitialModel(int count)
 {
     qDebug()<<"Setting initial model";
     insertRows(0, count, QModelIndex());
+}
+
+QHash<int, QByteArray> FileViewModel::roleNames() const
+{
+    QHash<int, QByteArray> roles;
+        roles[AstroFileRoles::IdRole] = "id";
+        roles[AstroFileRoles::DisplayRole] = "display";
+        roles[AstroFileRoles::DecorationRole] = "decoration";
+        roles[AstroFileRoles::ObjectRole] = "object";
+        roles[AstroFileRoles::InstrumentRole] = "instrument";
+        roles[AstroFileRoles::FilterRole] = "filter";
+        roles[AstroFileRoles::DateRole] = "date";
+        roles[AstroFileRoles::FullPathRole] = "fullpath";
+        roles[AstroFileRoles::RaRole] = "ra";
+        roles[AstroFileRoles::DecRole] = "dec";
+        roles[AstroFileRoles::CcdTempRole] = "ccd";
+        roles[AstroFileRoles::ImageXSizeRole] = "imagexsize";
+        roles[AstroFileRoles::ImageYSizeRole] = "imageysize";
+        roles[AstroFileRoles::GainRole] = "gain";
+        roles[AstroFileRoles::ExposureRole] = "exposure";
+        roles[AstroFileRoles::BayerModeRole] = "bayermode";
+        roles[AstroFileRoles::OffsetRole] = "offset";
+        roles[AstroFileRoles::FileTypeRole] = "filetype";
+        roles[AstroFileRoles::FileExtensionRole] = "fileextension";
+        roles[AstroFileRoles::FileHashRole] = "filehash";
+        return roles;
 }
 
 int FileViewModel::rowCount(const QModelIndex &parent) const
@@ -135,6 +162,18 @@ void FileViewModel::setCellSize(const int newSize)
     emit layoutChanged();
 }
 
+QString imageToString(QImage img)
+{
+    QByteArray byteArray;
+    QBuffer buffer(&byteArray);
+    buffer.open(QIODevice::WriteOnly);
+    img.save(&buffer,"JPEG");
+     //save image data in string
+    QString image("data:image/jpg;base64,");
+    image.append(QString::fromLatin1(byteArray.toBase64().data()));
+    return image;
+}
+
 QVariant FileViewModel::data(const QModelIndex &index, int role) const
 {
     if (index.row() >= rc)
@@ -165,6 +204,28 @@ QVariant FileViewModel::data(const QModelIndex &index, int role) const
                 QImage image = pixmap.toImage();
                 QImage small = image.scaled( cellSize*0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation);
                 return small;
+            }
+        }
+        case AstroFileRoles::DisplayRole:
+        {
+            return a.FileName;
+        }
+        case AstroFileRoles::DecorationRole:
+        {
+            QPixmap pixmap;
+            if (!QPixmapCache::find(QString::number(a.Id), &pixmap))
+            {
+    //                qDebug()<<"Requesting thumb from db for: " << a.Id;
+                emit loadThumbnailFromDb(a);
+                auto img = a.tinyThumbnail.scaled( cellSize*0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                return imageToString(img);
+            }
+            else
+            {
+    //                qDebug()<<"Showing thumb for: " << a.Id;
+                QImage image = pixmap.toImage();
+                QImage small = image.scaled( cellSize*0.9, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+                return imageToString(small);
             }
         }
         case Qt::SizeHintRole:
@@ -278,5 +339,5 @@ void FileViewModel::addThumbnail(const AstroFile &astroFile)
     auto index = createIndex(row, 0);
 //    qDebug()<<"Inserting into PixmapCache: " << astroFile.Id << " row: " << row;
     QPixmapCache::insert(QString::number(astroFile.Id), QPixmap::fromImage(astroFile.thumbnail));
-    emit dataChanged(index, index, {Qt::DecorationRole});
+    emit dataChanged(index, index, {AstroFileRoles::DecorationRole});
 }
