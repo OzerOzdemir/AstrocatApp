@@ -25,6 +25,7 @@ SOURCES += \
     fileprocessfilter.cpp \
     filerepository.cpp \
     fileviewmodel.cpp \
+    filtermodel.cpp \
     filterview.cpp \
     fitsfile.cpp \
     fitsprocessor.cpp \
@@ -49,6 +50,7 @@ HEADERS += \
     fileprocessor.h \
     filerepository.h \
     fileviewmodel.h \
+    filtermodel.h \
     filterview.h \
     fitsfile.h \
     fitsprocessor.h \

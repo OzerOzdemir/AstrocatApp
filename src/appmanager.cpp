@@ -92,6 +92,8 @@ void AppManager::initialize()
     fileFilter->setCatalog(catalog);
     fileFilter->moveToThread(folderCrawlerThread);
 
+    filterModel = new FilterModel();
+
     fileViewModel = new FileViewModel(); // Do we need to set a parent here?
     fileViewModel->setCatalog(catalog);
     sortFilterProxyModel = new SortFilterProxyModel(); // Do we need to set a parent here?
@@ -133,6 +135,8 @@ void AppManager::initialize()
 //    connect(sortFilterProxyModel,   &SortFilterProxyModel::filterMinimumDateChanged,    filterView,             &FilterView::setFilterMinimumDate);
 //    connect(sortFilterProxyModel,   &SortFilterProxyModel::filterMaximumDateChanged,    filterView,             &FilterView::setFilterMaximumDate);
 //    connect(sortFilterProxyModel,   &SortFilterProxyModel::filterReset,                 filterView,             &FilterView::searchFilterReset);
+    connect(sortFilterProxyModel,   &SortFilterProxyModel::astroFileAdded,    filterModel,             &FilterModel::astroFileAdded);
+
     connect(fileViewModel,          &FileViewModel::modelIsEmpty,                       this,                   &AppManager::setWatermark);
     connect(fileViewModel,          &FileViewModel::rowsInserted,                       this,                   &AppManager::rowsAddedToModel);
     connect(fileViewModel,          &FileViewModel::rowsRemoved,                        this,                   &AppManager::rowsRemovedFromModel);
@@ -180,6 +184,11 @@ void AppManager::hello(QString msg)
 SortFilterProxyModel* AppManager::getModel()
 {
     return this->sortFilterProxyModel;
+}
+
+FilterModel *AppManager::getFilterModel()
+{
+    return this->filterModel;
 }
 
 void AppManager::searchFolderAdded(const QString folder)

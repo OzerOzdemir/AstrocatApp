@@ -34,110 +34,42 @@ Page {
             ScrollBar.vertical.policy: ScrollBar.AlwaysOff
             ColumnLayout {
                 spacing: 20
-                GroupBox {
-                    id: groupBox1
-                    title: qsTr("Group Box 1")
-                    ColumnLayout {
-                        anchors.fill: parent
-                        CheckBox {
-                            text: qsTr("E-mail")
-                        }
-                        CheckBox {
-                            text: qsTr("Calendar")
-                        }
-                        CheckBox {
-                            text: qsTr("Contacts")
-                        }
-                    }
-                }
-                GroupBox {
-                    id: groupBox2
-                    title: qsTr("Group Box 2")
-
-                    ColumnLayout {
-                        spacing: -10
-                        anchors.fill: parent
-                        CheckBox {
-                            text: qsTr("E-mail")
-                            indicator.width: 14
-                            indicator.height: 14
-                        }
-                        CheckBox {
-                            text: qsTr("Calendar")
-                            indicator.width: 14
-                            indicator.height: 14
-                        }
-                        CheckBox {
-                            text: qsTr("Contacts")
-                            indicator.width: 14
-                            indicator.height: 14
+                Repeater {
+//                    model: ["Objects", "Dates", "Instruments", "Filters", "Extensions"]
+                    model: appManager.getFilterModel()
+                    GroupBox {
+//                        id: model.modelData
+                        title: group
+                        ColumnLayout{
+                            Repeater {
+                                model: tagcounts
+                                CheckBox {
+                                    text: modelData.getTagName() + " (" + modelData.getCount() + ")"
+                                }
+                            }
                         }
                     }
+//                    Text {
+//                        text: "I'm group " + index + ":" + model.modelData
+//                        color: "white"
+//                    }
                 }
-                GroupBox {
-                    id: groupBox3
-                    title: qsTr("Group Box 3")
-                    ColumnLayout {
-                        anchors.fill: parent
-                        CheckBox {
-                            text: qsTr("E-mail")
-                        }
-                        CheckBox {
-                            text: qsTr("Calendar")
-                        }
-                        CheckBox {
-                            text: qsTr("Contacts")
-                        }
-                    }
-                }
-                GroupBox {
-                    id: groupBox4
-                    title: qsTr("Group Box 4")
-                    ColumnLayout {
-                        anchors.fill: parent
-                        CheckBox {
-                            text: qsTr("E-mail")
-                        }
-                        CheckBox {
-                            text: qsTr("Calendar")
-                        }
-                        CheckBox {
-                            text: qsTr("Contacts")
-                        }
-                    }
-                }
-                GroupBox {
-                    id: groupBox5
-                    title: qsTr("Group Box 5")
-                    ColumnLayout {
-                        anchors.fill: parent
-                        CheckBox {
-                            text: qsTr("E-mail")
-                        }
-                        CheckBox {
-                            text: qsTr("Calendar")
-                        }
-                        CheckBox {
-                            text: qsTr("Contacts")
-                        }
-                    }
-                }
-                GroupBox {
-                    id: groupBox6
-                    title: qsTr("Group Box 6")
-                    ColumnLayout {
-                        anchors.fill: parent
-                        CheckBox {
-                            text: qsTr("E-mail")
-                        }
-                        CheckBox {
-                            text: qsTr("Calendar")
-                        }
-                        CheckBox {
-                            text: qsTr("Contacts")
-                        }
-                    }
-                }
+//                GroupBox {
+//                    id: groupBox1
+//                    title: qsTr("Group Box 1")
+//                    ColumnLayout {
+//                        anchors.fill: parent
+//                        CheckBox {
+//                            text: qsTr("E-mail")
+//                        }
+//                        CheckBox {
+//                            text: qsTr("Calendar")
+//                        }
+//                        CheckBox {
+//                            text: qsTr("Contacts")
+//                        }
+//                    }
+//                }
             }
         }
 
@@ -150,6 +82,11 @@ Page {
             Layout.fillWidth: true
             cellWidth: zoomSlider.value * 2.5; cellHeight: zoomSlider.value * 2.5
             model: appManager.getModel()
+//            function onRowsInserted() {console.log("Rows inserted")}
+            Connections {
+                target: model
+                function onRowsInserted() {console.log("Rows inserted")}
+            }
 //            currentIndex = index
             highlightFollowsCurrentItem: true
             highlight: Rectangle { color: "lightsteelblue"; radius: 5 }

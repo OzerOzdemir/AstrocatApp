@@ -57,11 +57,13 @@ signals:
     void filterMinimumDateChanged(QDate date);
     void filterMaximumDateChanged(QDate date);
     void filterReset();
+    void astroFileAdded(const AstroFile& astroFile) const;
 
 protected:
     // QSortFilterProxyModel interface
-    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
-    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const;
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override;
+    bool lessThan(const QModelIndex &source_left, const QModelIndex &source_right) const override;
+//    bool insertRows(int row, int count, const QModelIndex &parent) override;
 
 private:
     QDate minDate;
@@ -70,6 +72,8 @@ private:
     QList<QString> acceptedObjects;
     QList<QString> acceptedInstruments;
     QList<QString> acceptedExtensions;
+    QMap<QString, QMap<QString,int>> fileTags;
+    QSet<int> acceptedAstroFiles;
     bool dateInRange(QDate date) const;
     bool instrumentAccepted(QString instrument) const;
     bool objectAccepted(QString object) const;
@@ -78,9 +82,11 @@ private:
     bool isDuplicatedFilterActive;
     QString duplicatesFilter;
     bool isDuplicateOf(QString hash) const;
+//    void updateTagCount(const AstroFile* astroFile, QString tag) const;
 
 protected slots:
-    virtual void resetInternalData();
+    virtual void resetInternalData() override;
+
 };
 
 #endif // SORTFILTERPROXYMODEL_H

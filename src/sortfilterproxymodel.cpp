@@ -32,6 +32,15 @@ SortFilterProxyModel::SortFilterProxyModel(QObject *parent) : QSortFilterProxyMo
     isDuplicatedFilterActive = false;
 }
 
+//void SortFilterProxyModel::updateTagCount(const AstroFile* astroFile, QString tag) const
+//{
+//    auto value = astroFile->Tags.value(tag);
+//    if (!value.isEmpty())
+//    {
+//        fileTags[tag][value]++;
+//    }
+//}
+
 bool SortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
     QModelIndex index = sourceModel()->index(source_row, 0, source_parent);
@@ -45,6 +54,9 @@ bool SortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &s
 
     if (isDuplicatedFilterActive)
         shouldAccept = shouldAccept && isDuplicateOf(astroFile->FileHash);
+
+    if (shouldAccept)
+        emit astroFileAdded(*astroFile);
     return shouldAccept;
 }
 
@@ -56,6 +68,29 @@ bool SortFilterProxyModel::lessThan(const QModelIndex &source_left, const QModel
 
     return true;
 }
+
+//bool SortFilterProxyModel::insertRows(int row, int count, const QModelIndex &parent)
+//{
+//    qDebug() << "Insert Rows";
+
+//    QModelIndex index = sourceModel()->index(row, 0, parent);
+//    const AstroFile* astroFile = static_cast<AstroFile*>(index.internalPointer());
+//    Q_ASSERT(astroFile != NULL);
+
+//    int id = astroFile->Id;
+//    if (!acceptedAstroFiles.contains(id))
+//    {
+//        acceptedAstroFiles.insert(id);
+//        updateTagCount(astroFile, "OBJECT");
+//        updateTagCount(astroFile, "INSTRUME");
+//        updateTagCount(astroFile, "FILTER");
+//        updateTagCount(astroFile, "DATE-OBS");
+//        updateTagCount(astroFile, "FILEEXT");
+//    }
+//    qDebug() << fileTags.count();
+
+//    return true;
+//}
 
 bool SortFilterProxyModel::dateInRange(QDate date) const
 {

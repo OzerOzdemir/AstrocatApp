@@ -28,6 +28,7 @@
 #include "fileprocessfilter.h"
 #include "filerepository.h"
 #include "fileviewmodel.h"
+#include "filtermodel.h"
 #include "foldercrawler.h"
 #include "newfileprocessor.h"
 #include "sortfilterproxymodel.h"
@@ -48,6 +49,7 @@ public:
     void initialize();
     Q_INVOKABLE void hello(QString msg);
     Q_INVOKABLE SortFilterProxyModel* getModel();
+    Q_INVOKABLE FilterModel* getFilterModel();
 
 public slots:
 //    void newFileFound(const QFileInfo fileInfo);
@@ -122,6 +124,8 @@ private:
     FileProcessFilter* fileFilter;
 
     ThumbnailCache thumbnailCache;
+
+    FilterModel* filterModel;
 
     void cancelPendingOperations();
     void cleanUpWorker(QThread* thread);
