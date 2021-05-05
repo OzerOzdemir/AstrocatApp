@@ -40,16 +40,16 @@ public:
     QDate filterMaximumDate() const { return maxDate; }
 
 public slots:
-    void setFilterMinimumDate(QDate date);
-    void setFilterMaximumDate(QDate date);
-    void addAcceptedFilter(QString filterName);
-    void removeAcceptedFilter(QString filterName);
-    void addAcceptedInstrument(QString instrumentName);
-    void removeAcceptedInstrument(QString instrumentName);
-    void addAcceptedObject(QString objectName);
-    void removeAcceptedObject(QString objectName);
-    void addAcceptedExtension(QString extensionName);
-    void removeAcceptedExtension(QString extensionName);
+    Q_INVOKABLE void setFilterMinimumDate(QDate date);
+    Q_INVOKABLE void setFilterMaximumDate(QDate date);
+    Q_INVOKABLE void addAcceptedFilter(QString filterName);
+    Q_INVOKABLE void removeAcceptedFilter(QString filterName);
+    Q_INVOKABLE void addAcceptedInstrument(QString instrumentName);
+    Q_INVOKABLE void removeAcceptedInstrument(QString instrumentName);
+    Q_INVOKABLE void addAcceptedObject(QString objectName);
+    Q_INVOKABLE void removeAcceptedObject(QString objectName);
+    Q_INVOKABLE void addAcceptedExtension(QString extensionName);
+    Q_INVOKABLE void removeAcceptedExtension(QString extensionName);
     void activateDuplicatesFilter(bool shouldActivate);
     void setDuplicatesFilter(QString filter);
 

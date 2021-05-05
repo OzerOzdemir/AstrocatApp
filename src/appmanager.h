@@ -39,6 +39,7 @@
 #include <QThread>
 #include <QItemSelection>
 #include <QLabel>
+#include <QAbstractItemModelTester>
 
 class AppManager : public QObject
 {
@@ -129,7 +130,9 @@ private:
 
     void cancelPendingOperations();
     void cleanUpWorker(QThread* thread);
+    void crawlAllSearchFolders();
     QList<QString> getSearchFolders();
+    QAbstractItemModelTester* tester;
 };
 
 #endif // APPMANAGER_H

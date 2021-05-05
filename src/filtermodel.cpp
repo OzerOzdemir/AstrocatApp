@@ -52,7 +52,7 @@ void TagCount::decrementCount()
 
 
 TreeItem::TreeItem(bool isTagItem, QString groupName, TagCount* tag, TreeItem *parent)
-    :  m_parentItem(parent), m_isTagItem(isTagItem), m_groupName(groupName), m_tagCount(tag ? tag->getTagName(): "None", 0)
+    :  m_parentItem(parent), m_isTagItem(isTagItem), m_groupName(groupName), m_tagCount(tag ? tag->getTagName(): "None", 1)
 {
 //    if (isTagItem)
 //    {
@@ -165,20 +165,23 @@ void FilterModel::addAstroFile(const AstroFile &astroFile)
             updateTagCount(astroFile, a->getGroupName(), a);
             currentGroupRow++;
         }
-        insertRow(groups.count() - 1, QModelIndex());
+//        insertRow(groups.count() - 1, QModelIndex());
     }
-
 }
 
 void FilterModel::updateTagCount(const AstroFile& astroFile, QString tag, TreeItem* treeItem)
 {
+//    qDebug()<<"processing: " + astroFile.FileName;
     auto children = rootItem->getChildren();
-    for (auto& a: children)
+//    qDebug()<< "Total groups: " + QString::number(children.count());
+//    for (auto& group: children)
+    TreeItem* group = treeItem;
     {
-        auto groupName = a->getGroupName();
+        auto groupName = group->getGroupName();
         if (astroFile.Tags.contains(groupName))
         {
-            auto tagChildren = a->getChildren();
+            auto tagChildren = group->getChildren();
+//            qDebug()<< "Total tags in group: " + QString::number(tagChildren.count());
             int tagRow = 0;
             bool tagFound = false;
             for (auto& c: tagChildren)
@@ -187,22 +190,24 @@ void FilterModel::updateTagCount(const AstroFile& astroFile, QString tag, TreeIt
                 {
                     c->getTagCount()->incrementCount();
 
+//                    qDebug()<<"Incremented: " + c->getTagCount()->getTagName() + " to " + QString::number(c->getTagCount()->getCount());
+
                     // emit that data has changed here.
-                    dataChanged(createIndex(tagRow, 2, treeItem), createIndex(tagRow, 2, treeItem));
+                    dataChanged(createIndex(tagRow, 1, treeItem), createIndex(tagRow, 1, treeItem));
                     tagFound = true;
                     break;
                 }
                 tagRow++;
             }
             if (tagFound)
-                continue;
+                return;
             // We didn't find this tag in the tree, so let's create a new one.
             auto tagName = astroFile.Tags[groupName];
 //            qDebug ()<< "Creating tag: " <<tagName;
-            a->appendChild(new TreeItem(true, groupName, new TagCount(astroFile.Tags[groupName] , 1)));
+            group->appendChild(new TreeItem(true, groupName, new TagCount(astroFile.Tags[groupName] , 1)));
 
+            insertRow(tagRow, createIndex(tagRow, 0, treeItem));
             insertRow(tagRow, createIndex(tagRow, 1, treeItem));
-            insertRow(tagRow, createIndex(tagRow, 2, treeItem));
         }
     }
 }
@@ -284,9 +289,8 @@ QVariant FilterModel::data(const QModelIndex &index, int role) const
             for (auto a : item->getChildren())
             {
                 varList.append(QVariant::fromValue(a->getTagCount()));
-                a->getTagCount();
             }
-//            qDebug()<<"Filter returning tagCounts: " << varList.count();
+            qDebug()<<"Filter returning tagCounts: " << varList.count();
             return varList;
         }
     }

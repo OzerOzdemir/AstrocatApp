@@ -158,6 +158,8 @@ void AppManager::initialize()
 //    connect(ui->astroListView,      &QWidget::customContextMenuRequested,               this,                   &AppManager::itemContextMenuRequested);
 //    connect(selectionModel,         &QItemSelectionModel::selectionChanged,             this,                   &AppManager::handleSelectionChanged);
 
+//    tester = new QAbstractItemModelTester(filterModel, QAbstractItemModelTester::FailureReportingMode::Fatal, this);
+
     auto foldersFromList = getSearchFolders();
     catalog->addSearchFolder(foldersFromList);
     folderCrawlerThread->start();
@@ -193,7 +195,9 @@ FilterModel *AppManager::getFilterModel()
 
 void AppManager::searchFolderAdded(const QString folder)
 {
+//    catalog->addSearchFolder(folder);
 
+//    emit folderCrawlerWorker->crawl(folder);
 }
 
 void AppManager::searchFolderRemoved(const QString folder)
@@ -216,13 +220,36 @@ void AppManager::handleSelectionChanged(QItemSelection selection)
 
 }
 
+void AppManager::crawlAllSearchFolders()
+{
+    auto foldersFromList = getSearchFolders();
+    for (auto& f : foldersFromList)
+    {
+        emit crawl(f);
+    }
+}
+
 void AppManager::modelLoadedFromDb(const QList<AstroFile> &files)
 {
     emit catalogAddAstroFiles(files);
+
+    crawlAllSearchFolders();
 }
 
 void AppManager::astroFileProcessed(const AstroFile &astroFile)
 {
+    QFileInfo fileInfo(astroFile.FullPath);
+    if (!catalog->shouldProcessFile(fileInfo))
+    {
+        // This file is not in the catalog anymore.
+//        numberOfActiveJobs--;
+//        ui->statusbar->showMessage(QString("Jobs Queue: %1").arg(numberOfActiveJobs));
+        return;
+    }
+
+    // do not decrement numberOfActiveJobs yet. It will be decremented
+    // after the db recorded it.
+    emit dbAddOrUpdateAstroFile(astroFile);
 
 }
 

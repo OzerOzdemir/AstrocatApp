@@ -1,4 +1,4 @@
-QT       += core gui sql concurrent quick
+QT       += core gui sql concurrent quick testlib
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 

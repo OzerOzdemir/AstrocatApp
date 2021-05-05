@@ -35,7 +35,6 @@ Page {
             ColumnLayout {
                 spacing: 20
                 Repeater {
-//                    model: ["Objects", "Dates", "Instruments", "Filters", "Extensions"]
                     model: appManager.getFilterModel()
                     GroupBox {
 //                        id: model.modelData
@@ -45,6 +44,62 @@ Page {
                                 model: tagcounts
                                 CheckBox {
                                     text: modelData.getTagName() + " (" + modelData.getCount() + ")"
+//                                        text: tagname + " (" + tagvalue + ")"
+                                    onClicked: {
+                                        switch (group)
+                                        {
+                                            case "OBJECT":
+                                                if (checkState == Qt.Checked)
+                                                {
+                                                    appManager.getModel().addAcceptedObject(modelData.getTagName() )
+                                                }
+                                                else if (checkState == Qt.Unchecked)
+                                                {
+                                                    appManager.getModel().removeAcceptedObject(modelData.getTagName() )
+                                                }
+                                            break;
+//                                            case "Dates":
+//                                                if (checkState == Qt.Checked)
+//                                                {
+//                                                    appManager.getModel().addAcceptedObject(modelData.getTagName() )
+//                                                }
+//                                                else if (checkState == Qt.Unchecked)
+//                                                {
+//                                                    appManager.getModel().removeAcceptedObject(modelData.getTagName() )
+//                                                }
+//                                                break;
+                                            case "INSTRUME":
+                                                if (checkState == Qt.Checked)
+                                                {
+                                                    appManager.getModel().addAcceptedInstrument(modelData.getTagName() )
+                                                }
+                                                else if (checkState == Qt.Unchecked)
+                                                {
+                                                    appManager.getModel().removeAcceptedInstrument(modelData.getTagName() )
+                                                }
+                                            break;
+                                            case "FILTER":
+                                                if (checkState == Qt.Checked)
+                                                {
+                                                    appManager.getModel().addAcceptedFilter(modelData.getTagName() )
+                                                }
+                                                else if (checkState == Qt.Unchecked)
+                                                {
+                                                    appManager.getModel().removeAcceptedFilter(modelData.getTagName() )
+                                                }
+                                            break;
+                                            case "FILEEXT":
+                                                if (checkState == Qt.Checked)
+                                                {
+                                                    appManager.getModel().addAcceptedExtension(modelData.getTagName() )
+                                                }
+                                                else if (checkState == Qt.Unchecked)
+                                                {
+                                                    appManager.getModel().removeAcceptedExtension(modelData.getTagName() )
+                                                }
+                                            break;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -85,7 +140,7 @@ Page {
 //            function onRowsInserted() {console.log("Rows inserted")}
             Connections {
                 target: model
-                function onRowsInserted() {console.log("Rows inserted")}
+                function onrowsInserted(parent, first, last) {console.log("Rows inserted")}
             }
 //            currentIndex = index
             highlightFollowsCurrentItem: true
