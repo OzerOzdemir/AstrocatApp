@@ -30,6 +30,7 @@
 #include "catalog.h"
 #include "mock_foldercrawler.h"
 #include "modelloadingdialog.h"
+//#include "diskinfo.h"
 
 #include <QContextMenuEvent>
 #include <QMessageBox>
@@ -190,6 +191,9 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Enable the tester during development and debugging. Disble before committing
 //    tester = new QAbstractItemModelTester(fileViewModel, QAbstractItemModelTester::FailureReportingMode::Fatal, this);
+
+//    QString filePath = "/Volumes/MacOS";
+//    DiskInfo diskInfo(filePath);
 }
 
 MainWindow::~MainWindow()

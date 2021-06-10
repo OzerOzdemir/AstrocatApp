@@ -30,7 +30,7 @@ SOURCES += \
     mock_foldercrawler.cpp \
     mock_newfileprocessor.cpp \
     modelloadingdialog.cpp \
-    newfileprocessor.cpp \
+    newfileprocessor.cpp \    
     searchfolderdialog.cpp \
     sortfilterproxymodel.cpp \
     thumbnailcache.cpp \
@@ -41,6 +41,7 @@ HEADERS += \
     astrofile.h \
     autostretcher.h \
     catalog.h \
+    diskinfo.h \
     fileprocessfilter.h \
     fileprocessor.h \
     filerepository.h \
@@ -86,6 +87,9 @@ win32 {
 macx {
     DEFINES += __PCL_MACOSX
     ICON = resources/Icons/mac.icns
+
+    SOURCES += \
+        platform/macos/diskinfo.cpp
 }
 linux {
 DEFINES += __PCL_LINUX
